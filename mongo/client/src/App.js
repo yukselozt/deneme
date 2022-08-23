@@ -7,17 +7,33 @@ function App() {
   const [foodName,setFoodName] =useState('');
   const [days,setDays] = useState(0);
   const [foodList,setFoodList] =useState([]);
+  const [newFoodName,setNewFoodName] =useState([]);
 
   useEffect(() => {
     Axios.get('http://localhost:3001/read').then((response) => {
       setFoodList(response.data)
     })
   },[])
+  
 
   const addToList=() => {
     console.log(foodName+"   "+days);
     Axios.post("http://localhost:3001/insert",{foodName:foodName,days:days});
+    window.location.reload();
+    
   };
+
+  const updateFood = (id) => {
+    console.log("food updated");
+    Axios.put("http://localhost:3001/update",{id:id,newFoodName:newFoodName,days:days})
+    window.location.reload();
+  };
+
+  const deleteFood = (id) => {
+    console.log("food deleted");
+    Axios.delete(`http://localhost:3001/delete/${id}`)
+    window.location.reload();
+  }
 
   return (
     <div className='App'>
@@ -40,7 +56,18 @@ function App() {
       <button onClick={addToList}>Add To List</button>
       <h1>Food List</h1>
       {foodList.map((val,key) => {
-        return <div key={key}><h1>{val.foodName}</h1><h1>{val.daysSince}</h1></div>
+        return <div className='food' key={key}>
+          <h1>{val.foodName}</h1><h1>{val.daysSinceIAte}</h1>
+          <input
+           type='text' 
+           placeholder="New Food Name.." 
+           onChange={(event) =>{
+            setNewFoodName(event.target.value);
+          }}/>
+          <button onClick={() => {updateFood(val._id)}}>Update</button>
+          <button onClick={() => {deleteFood(val._id)}}>Delete</button>
+          </div>
+
       })}
     </div>
   );

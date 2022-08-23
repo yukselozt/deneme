@@ -13,3 +13,10 @@ input,button{
   font-size: 20px;
 }
 
+.food{
+  width: 500px;
+  height: 200px;
+  border: 2px solid orangered;
+  margin: 10px;
+}
+
