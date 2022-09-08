@@ -1,22 +1,46 @@
 .App {
+
   text-align: center;
   display:flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  
 }
 
 input,button{
-  margin:5px;
+  margin:10px;
   width: 200px;
   height: 30px;
   font-size: 20px;
+  
 }
 
+
 .food{
-  width: 500px;
-  height: 200px;
-  border: 2px solid orangered;
-  margin: 10px;
+  width: 1000px;
+  height: 70px;
+  font-size: 30px;
+  padding:10px;
 }
+
+
+
+td{
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 600px;
+  max-height: 600px;
+}
+
+th{
+  min-width: 300px;
+  min-height: 300px;
+  max-width: 600px;
+  max-height: 600px;
+}
+
+
+
+
 

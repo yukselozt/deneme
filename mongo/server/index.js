@@ -1,16 +1,35 @@
 const express = require('express');
 const app = express();
+
 const mongoose = require('mongoose');
 const cors =require('cors');
 
+const redis = require("redis");
+
 //This import represents -->Food.js
-const FoodModel = require('./models/Food')
+const FoodModel = require('./models/Food');
+const { response } = require('express');
 
 app.use(cors());
 app.use(express.json());
-mongoose.connect("mongodb+srv://yuksel:1234@crud.k0ijv9a.mongodb.net/food",{
+
+mongoose.connect("mongodb+srv://Can:1234@cluster0.1keofnq.mongodb.net/food",{
     useNewUrlParser : true
-})
+});
+
+const client = redis.createClient({
+    socket: {
+      host: "2.12.100.142",
+      port: 6379
+    },
+  });
+
+/*;( async() => {
+ await client.connect(() => {
+    console.log('gggg')
+ });
+})()*/
+
 
 app.post('/insert', async (req,res) =>{
 
@@ -48,7 +67,28 @@ app.put('/update', async (req,res) =>{
         await FoodModel.findById(id,(err,updatedFood) => {
             updatedFood.foodName=newFoodName;
             updatedFood.save();
+
             res.send("update");
+            
+        })
+    }catch(err){
+        console.log(err)
+    }
+});
+
+app.put('/update2', async (req,res) =>{
+
+    const newQuantity =req.body.newQuantity
+    const id =req.body.id
+
+    try{
+        await FoodModel.findById(id,(err,updatedQuantity) => {
+            
+            updatedQuantity.daysSinceIAte=newQuantity;
+            updatedQuantity.save();
+
+            
+            res.send("update2");
             
         })
     }catch(err){
@@ -67,5 +107,20 @@ app.listen(3001,() =>{
 
 });
 
-// can was here!
+app.get('/getData', async (req,res) =>{
+    await client.connect();
+    const currentvalue = await client.get('framework21');
+    console.log(currentvalue + ' geldi oh');
+    res.json(currentvalue);
+    await client.quit();
+ });
+
+
+ app.post('/setData', async (req,res) =>{
+    await client.connect();
+    const setValue = await client.set("framework21");
+    console.log(setValue + ' Ekleme yapıldı');
+    res.json(setValue);
+    await client.quit();
+ });
 
